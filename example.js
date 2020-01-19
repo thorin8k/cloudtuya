@@ -2,14 +2,13 @@
 * Example script using cloudtuya to connect, get states an change them
 */
 
-const debug = require('debug')('cloudtuya');
 const fs = require('fs');
 const CloudTuya = require('./cloudtuya');
 const Light = require('./devices/light');
 
 const name = 'cloudtuya';
 
-debug('booting %s', name);
+console.log('booting %s', name);
 // Load local files
 let apiKeys = {};
 let deviceData = {};
@@ -30,12 +29,12 @@ try{
 * @param {String} [file="./devices.json"] to save to
 */
 function saveDataToFile(data, file = './devices.json') {
-  debug(`Data ${JSON.stringify(data)}`);
+  console.log(`Data ${JSON.stringify(data)}`);
   fs.writeFile(file, JSON.stringify(data), (err) => {
     if(err) {
-      return debug(err);
+      return console.log(err);
     }
-    debug(`The file ${file} was saved!`);
+    console.log(`The file ${file} was saved!`);
     return(file);
   });
 }
@@ -53,43 +52,43 @@ async function main() {
 
   // Test device read from devics.json saved at the end.
   var testId = deviceData[0].id || '10000000000';
-  debug(`device data ${deviceData} and ${deviceData[0].id} id or all ${deviceData[0].name}`);
+  console.log(`device data ${deviceData} and ${deviceData[0].id} id or all ${deviceData[0].name}`);
 
   // Connect to cloud api and get access token.
   const tokens = await api.login();
-  debug(`Token ${JSON.stringify(tokens)}`);
+  console.log(`Token ${JSON.stringify(tokens)}`);
 
   // Get all devices registered on the Tuya app
   let devices = await api.find();
-  debug(`devices ${JSON.stringify(devices)}`);
+  console.log(`devices ${JSON.stringify(devices)}`);
 
   // Save device to device.json
   saveDataToFile(devices);
 
   // Setting new Device ID
-  testId = devices[0].id;
+  // testId = devices[0].id;
 
-  // Get state of a single device
-  const deviceStates = await api.state({
-    devId: testId,
-  });
-  const state = deviceStates.testId;
-  debug(`testId ${testId}  has value ${state}`);
-  debug(`devices ${JSON.stringify(deviceStates)}`);
-  debug(`devices ${JSON.stringify(devices)}`);
+  // // Get state of a single device
+  // const deviceStates = await api.state({
+  //   devId: testId,
+  // });
+  // const state = deviceStates.testId;
+  // console.log(`testId ${testId}  has value ${state}`);
+  // console.log(`devices ${JSON.stringify(deviceStates)}`);
+  // console.log(`devices ${JSON.stringify(devices)}`);
 
 
   // Example how to turn on a lamp and set brightness
-  var myLight =  new Light({ api: api, deviceId: testId});
+  // var myLight =  new Light({ api: api, deviceId: testId});
 
-  myLight.turnOn();
-  myLight.setBrightness(80);
+  // myLight.turnOn();
+  // myLight.setBrightness(80);
 
-  var brightness = await myLight.getBrightness();
-  var isOn =(JSON.stringify(await myLight.isOn()));
+  // var brightness = await myLight.getBrightness();
+  // var isOn =(JSON.stringify(await myLight.isOn()));
 
-  console.log(`lamp on: ${isOn}`);
-  console.log(`brightness is set to ${brightness}`);
+  // console.log(`lamp on: ${isOn}`);
+  // console.log(`brightness is set to ${brightness}`);
 
 }
 main();
