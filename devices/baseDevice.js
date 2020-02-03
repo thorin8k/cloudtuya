@@ -1,11 +1,11 @@
 class BaseDevice {
   constructor(options) {
-    if(!options.api){
+    if (!options.api) {
       throw new Error('Please pass the Tuya API');
     }
     this._api = options.api;
 
-    if(!options.deviceId){
+    if (!options.deviceId) {
       throw new Error('Please pass the Tuya API');
     }
     this._deviceId = options.deviceId;
@@ -24,8 +24,11 @@ class BaseDevice {
     });
   }
 
-  async isOn(){
-    return JSON.parse((await this.getSkills())['state']);
+  async isOn() {
+    let data = await this.getSkills();
+    // console.log(data)
+    return data['state'];
+    // return JSON.parse(()['state']);
   }
 
   async getSkills() {
@@ -35,7 +38,7 @@ class BaseDevice {
     return state && state[0] && state[0].data;
   }
 
-  async supportsFeature(feature){
+  async supportsFeature(feature) {
     var skills = await this.getSkills();
     return !!skills[feature];
   }
